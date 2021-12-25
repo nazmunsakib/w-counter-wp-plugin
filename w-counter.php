@@ -27,9 +27,23 @@ function wordcount_count_words($content){
     $stripped_count = strip_tags($content);
     $word = str_word_count($stripped_count);
     $label = __("Total Number of Words", "word-count");
-    $content .= sprintf("<h3>%s : %s</h3>", $label, $word);
+    $label = apply_filters("wordcount_heading", $label);
+    $tag = apply_filters("wordcount_tag", "h3");
+    $content .= sprintf("<%s>%s : %s</%s>", $tag, $label, $word, $tag);
 
    return $content;
 }
 add_filter("the_content", "wordcount_count_words");
+
+function wordcount_reading_time($content){
+    $stripped_count = strip_tags($content);
+    $words = str_word_count($stripped_count);
+    $reading_minutes = floor($words / 200);
+    $reading_seconds = floor($words % 200 / (200/ 60));
+    $label = __("Total Reading Time", "word-count");
+    $content .= sprintf("<h5>%s : %s Minutes %s Second </h5>", $label, $reading_minutes, $reading_seconds);
+
+    return $content;
+}
+add_filter("the_content", "wordcount_reading_time");
 
